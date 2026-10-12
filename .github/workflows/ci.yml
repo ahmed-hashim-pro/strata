@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: ["1.74", stable]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - run: cargo test --locked
+
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --locked -- -D warnings
+
+  # The README's headline number: of the stated 95% intervals, about 95%
+  # contain the true geology, on smooth and on rough contacts.
+  calibration:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release --locked
+      - run: target/release/strata bench --sites 100 --check
+      - run: target/release/strata bench --sites 100 --rough --check
+
+  # The pictures in docs/ must be what the current code draws.
+  docs-fresh:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release --locked
+      - run: |
+          S=target/release/strata
+          $S synth --seed 7 --holes 40 -o examples/site.csv
+          $S section examples/site.csv --from 40,470 --to 980,560 --truth 7 -o docs/section.svg
+          $S map examples/site.csv --line 40,470:980,560 -o docs/map.svg
+          git diff --exit-code -- examples docs

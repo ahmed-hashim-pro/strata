@@ -1,0 +1,4 @@
+units: topsoil, clay, sand, chalk
+hole,x,y,collar,unit,from,to
+A,0,0,50,topsoil,0,1
+A,0,0,50,clya,1,5

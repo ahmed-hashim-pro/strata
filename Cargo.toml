@@ -1,0 +1,23 @@
+[package]
+name = "strata"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+description = "Borehole logs to a layered subsurface model that says how sure it is, and refuses where it isn't"
+license = "MIT"
+repository = "https://github.com/ahmed-hashim-pro/strata"
+readme = "README.md"
+keywords = ["geology", "kriging", "borehole", "geostatistics", "uncertainty"]
+categories = ["science", "command-line-utilities"]
+
+# No dependencies: the numerics (LU, variogram fitting, kriging) and the RNG
+# behind the synthetic sites are small enough to own, and owning them keeps
+# every result reproducible from a seed.
+[dependencies]
+
+[profile.test]
+opt-level = 2
+
+[[bin]]
+name = "strata"
+path = "src/main.rs"
