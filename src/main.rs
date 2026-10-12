@@ -414,7 +414,27 @@ fn run(raw: &[String]) -> Result<u8, String> {
     }
 }
 
+/// Rust ignores SIGPIPE, so `strata validate f | head` would panic on the
+/// first write after `head` exits. Restore the default: die quietly, as
+/// every other filter in the pipe does.
+#[cfg(unix)]
+fn restore_sigpipe() {
+    extern "C" {
+        fn signal(signum: i32, handler: usize) -> usize;
+    }
+    const SIGPIPE: i32 = 13;
+    const SIG_DFL: usize = 0;
+    // SAFETY: setting a signal to its default disposition, before any threads exist.
+    unsafe {
+        signal(SIGPIPE, SIG_DFL);
+    }
+}
+
+#[cfg(not(unix))]
+fn restore_sigpipe() {}
+
 fn main() -> ExitCode {
+    restore_sigpipe();
     let raw: Vec<String> = std::env::args().skip(1).collect();
     match run(&raw) {
         Ok(code) => ExitCode::from(code),

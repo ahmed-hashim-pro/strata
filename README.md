@@ -237,7 +237,7 @@ unless you pass `-o`. **Exit codes:** 0 ok; 1 refused (`query`) or a failed
 
 ## How it is tested
 
-`cargo test` runs 45 tests:
+`cargo test` runs 46 tests:
 
 - **Unit tests (27).**
   - LU solve against random systems, including the zero diagonal of a kriging
@@ -262,7 +262,8 @@ unless you pass `-o`. **Exit codes:** 0 ok; 1 refused (`query`) or a failed
     pooled 93–97%, msse 0.75–1.25.
   - Rough sites: the same bounds.
   - More holes give lower error and fewer refusals.
-- **CLI (10).** The real binary's exit codes and output, and a check that
+- **CLI (11).** The real binary's exit codes and output, that it exits quietly
+  when a pipe closes, and a check that
   `examples/site.csv` is exactly what `strata synth --seed 7` produces.
 
 CI runs:

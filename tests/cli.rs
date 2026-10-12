@@ -101,3 +101,21 @@ fn example_is_what_synth_generates() {
     let committed = std::fs::read_to_string(SITE).unwrap();
     assert_eq!(stdout(&o), committed, "examples/site.csv is stale: run `make examples`");
 }
+
+#[cfg(unix)]
+#[test]
+fn a_closed_pipe_is_not_a_crash() {
+    // The section is ~95 KB, more than a pipe buffer: `head` exits while strata is
+    // still writing, and strata must not panic (exit 101) on the next write.
+    let o = Command::new("bash")
+        .arg("-c")
+        .arg(format!(
+            "set -o pipefail; '{}' section examples/site.csv --from 0,0 --to 900,900 | head -1 > /dev/null; echo $?",
+            env!("CARGO_BIN_EXE_strata")
+        ))
+        .current_dir(env!("CARGO_MANIFEST_DIR"))
+        .output()
+        .unwrap();
+    let code = String::from_utf8_lossy(&o.stdout).trim().to_string();
+    assert!(code == "141" || code == "0", "exit {code}: {}", String::from_utf8_lossy(&o.stderr));
+}
