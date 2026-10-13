@@ -17,6 +17,7 @@ the truth.
 
 ```
 $ strata query examples/site.csv 490 440        # next to hole BH16
+at (490, 440), max sigma 1.5 m
 surface               elevation        95% interval   sigma
 ground surface            63.63     63.28 .. 63.97       0.17
 base of topsoil           62.64     62.28 .. 63.01       0.19
@@ -25,6 +26,7 @@ base of sand              56.79     55.99 .. 57.60       0.41
 base of gravel            51.90     51.06 .. 52.74       0.43
 
 $ strata query examples/site.csv 600 480        # 120 m from the nearest hole
+at (600, 480), max sigma 1.5 m
 surface               elevation        95% interval   sigma
 ground surface            63.93     62.74 .. 65.13       0.61
 base of topsoil           63.18     61.88 .. 64.48       0.66
