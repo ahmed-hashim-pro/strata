@@ -29,7 +29,8 @@ pub struct Fitted {
     pub observations: usize,
     pub kriging: Kriging,
     /// Multiplier on the kriging variance, from the variable's own
-    /// leave-one-out errors (see `variance_scale`). Never below 1.
+    /// leave-one-out errors (see `variance_scale`). Clamped to
+    /// `VARIANCE_SCALE_LIMITS`, so it can be below 1 as well as above.
     pub variance_scale: f64,
 }
 

@@ -20,13 +20,6 @@ const FEATURES: usize = 400;
 /// Minimum spacing between synthetic holes.
 const SPACING_M: f64 = 30.0;
 
-/// A stationary Gaussian random field with a Matérn 3/2 covariance,
-/// sd^2 (1 + a) exp(-a) with a = sqrt(3) r / l, scaled so the correlation is
-/// 0.05 at `range`. It is smooth, as sedimentary contacts are, and it is not
-/// one of the variogram families the model fits, so the model is never handed
-/// the true answer's shape. Drawn as a sum of random cosines whose
-/// frequencies come from the covariance's spectral density: a bivariate
-/// Student t with three degrees of freedom, scaled by 1/l.
 /// Covariance family of a synthetic field.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Smoothness {
@@ -36,6 +29,14 @@ pub enum Smoothness {
     Rough,
 }
 
+/// A stationary Gaussian random field with a Matérn 3/2 covariance,
+/// sd^2 (1 + a) exp(-a) with a = sqrt(3) r / l, scaled so the correlation is
+/// 0.05 at `range`. It is smooth, as sedimentary contacts are, and it is not
+/// one of the variogram families the model fits, so the model is never handed
+/// the true answer's shape. Drawn as a sum of random cosines whose
+/// frequencies come from the covariance's spectral density: a bivariate
+/// Student t with three degrees of freedom, scaled by 1/l. `Field::with`
+/// can draw an exponential (rough) field instead.
 #[derive(Debug, Clone)]
 pub struct Field {
     mean: f64,
