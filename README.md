@@ -69,8 +69,9 @@ strata cv       examples/site.csv                # leave-one-hole-out
 strata bench                                     # 50 synthetic sites against the truth
 ```
 
-`cargo test` runs the whole suite in a few seconds. `make check` adds
-rustfmt, clippy, and the full 100-site calibration runs that CI does.
+`cargo test` runs the whole suite, in a few seconds once it is built.
+`make check` adds rustfmt, clippy, and the full 100-site calibration runs
+that CI does.
 
 ## The input
 
@@ -262,7 +263,7 @@ unless you pass `-o`. **Exit codes:** 0 ok; 1 refused (`query`) or a failed
 - **Calibration (3).**
   - Smooth sites, 40 sites × 150 points: every surface inside 90–98.5%,
     pooled 93–97%, msse 0.75–1.25.
-  - Rough sites: the same bounds.
+  - Rough sites: the same bounds, except pooled 92–97%.
   - More holes give lower error and fewer refusals.
 - **CLI (11).** The real binary's exit codes and output, that it exits quietly
   when a pipe closes, and a check that
